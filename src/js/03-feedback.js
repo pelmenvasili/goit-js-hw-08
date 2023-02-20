@@ -6,11 +6,6 @@ const STORAGE_KEY = 'feedback-form-state';
 const inputRef = document.querySelector('input[name="email"]');
 const formData = {};
 
-const onTextAreaChange = evt => {
-  const message = evt.target.value;
-  localStorage.setItem(STORAGE_KEY, message);
-};
-
 const onFormSubmit = evt => {
   console.log(JSON.parse(localStorage.getItem(STORAGE_KEY)));
   evt.preventDefault();
@@ -18,12 +13,13 @@ const onFormSubmit = evt => {
   localStorage.removeItem(STORAGE_KEY);
 };
 
-textAreaRef.addEventListener('input', throttle(onTextAreaChange, 500));
-formRef.addEventListener('submit', onFormSubmit);
-formRef.addEventListener('input', e => {
+const onInputChange = e => {
   formData[e.target.name] = e.target.value;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
-});
+}
+
+formRef.addEventListener('submit', onFormSubmit);
+formRef.addEventListener('input', throttle(onInputChange, 500));
 
 const fillingTextArea = () => {
   const savedMessage = JSON.parse(localStorage.getItem(STORAGE_KEY));
